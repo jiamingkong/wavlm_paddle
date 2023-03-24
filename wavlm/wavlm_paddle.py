@@ -388,6 +388,9 @@ class WavLM(nn.Layer):
         if ret_layer_results:
             feature = (feature, res["layer_results"])
         return feature, res["padding_mask"]
+    
+    def forward(self, x):
+        return self.extract_features(x)[0]
 
 
 class ConvFeatureExtractionModel(nn.Layer):

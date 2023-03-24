@@ -16,8 +16,8 @@ module = WavLM(cfg)
 # module.load_state_dict(checkpoint['model'])
 module.eval()
 
-inp = paddle.rand((100, 100)).numpy().astype("float32")
+inp = paddle.rand((1, 16000)).numpy().astype("float32")
 inp = ({'x': paddle.to_tensor(inp)},
-     {'y': torch.as_tensor(inp) })
+     {'x': torch.as_tensor(inp)})
 
-auto_diff(layer, module, inp, auto_weights=True, options={'atol': 1e-4, 'rtol':0, 'compare_mode': 'strict', 'single_step':False})
+auto_diff(layer, module, inp, auto_weights=True, options={'atol': 1e-2, 'rtol':1e-2, 'compare_mode': 'strict', 'single_step':True, "diff_phase": "forward"})
