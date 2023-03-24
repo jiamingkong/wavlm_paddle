@@ -5,24 +5,14 @@ import paddle
 from collections import OrderedDict
 
 DONT_TRANSPOSE = [
-    ".layer_norm",  # verified
-    ".position_embeddings",  # verified
-    ".embeddings",  # verified
+    # ".layer_norm",  # verified
+    # ".position_embeddings",  # verified
+    # ".embeddings",  # verified
+    "relative_attention_bias.weight"
 ]
 
 # https://paddlenlp.readthedocs.io/zh/latest/community/contribute_models/convert_pytorch_to_paddle.html#id4
 keys_dict = {
-    "encoder.layer": "encoder.layers",
-    "attention.self.query": "self_attn.q_proj",
-    "attention.self.key": "self_attn.k_proj",
-    "attention.self.value": "self_attn.v_proj",
-    "attention.output.dense": "self_attn.out_proj",
-    "attention.output.LayerNorm.weight": "norm1.weight",
-    "attention.output.LayerNorm.bias": "norm1.bias",
-    "intermediate.dense": "linear1",
-    "output.dense": "linear2",
-    "output.LayerNorm.weight": "norm2.weight",
-    "output.LayerNorm.bias": "norm2.bias",
 }
 
 
@@ -42,7 +32,7 @@ def convert_torch_to_paddle(torch_weight_path, paddle_weight_path):
     Quickly convert torch state dict into a paddle weight
     """
     # Load the torch model and map to CPU
-    torch_weights = torch.load(torch_weight_path, map_location="cpu")
+    torch_weights = torch.load(torch_weight_path, map_location="cpu")["model"]
     # prepare an empty OrderedDict
     paddle_weights = OrderedDict()
     # iterate through the keys and convert the tensors
@@ -58,12 +48,11 @@ def convert_torch_to_paddle(torch_weight_path, paddle_weight_path):
         for k in keys_dict:
             if k in key:
                 key = key.replace(k, keys_dict[k])
-        if "pred_layer.proj.weight" in key:
-            # skip the pred_layer if the model has any
-            print(f"Skipping {key}")
-            continue
-        if "pred_layer.proj.bias" in key:
-            key = key.replace("pred_layer.proj.bias", "pred_layer.bias")
+
+        # for the weight "encoder.pos_conv.0.weight_g", squeeze the torch weight twice to make its original shape [1,1,128] into [128]
+        if "pos_conv" in key and "weight_g" in key:
+            value = value.squeeze().squeeze()
+            
         print(
             f"{_key} ==> {key} ({value.shape}, transposed = {transposed}, sum = {value.sum()})"
         )

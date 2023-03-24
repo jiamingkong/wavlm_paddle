@@ -1,3 +1,18 @@
+mask_emb [768] 0.129 0.050
+feature_extractor.conv_layers.0.0.weight [512, 1, 10] 0.068 -0.000
+feature_extractor.conv_layers.0.2.weight [512] 0.468 0.170
+feature_extractor.conv_layers.0.2.bias [512] 0.004 -0.000
+feature_extractor.conv_layers.1.0.weight [512, 512, 3] 0.071 -0.007
+feature_extractor.conv_layers.2.0.weight [512, 512, 3] 0.081 0.004
+feature_extractor.conv_layers.3.0.weight [512, 512, 3] 0.072 0.003
+feature_extractor.conv_layers.4.0.weight [512, 512, 3] 0.073 0.005
+feature_extractor.conv_layers.5.0.weight [512, 512, 2] 0.039 0.001
+feature_extractor.conv_layers.6.0.weight [512, 512, 2] 0.014 -0.000
+post_extract_proj.weight [768, 512] 0.059 0.000
+post_extract_proj.bias [768] 0.105 -0.017
+encoder.pos_conv.0.bias [768] 0.101 0.106
+encoder.pos_conv.0.weight_g [1, 1, 128] 1.405 0.377
+encoder.pos_conv.0.weight_v [768, 48, 128] 0.062 0.002
 encoder.layers.0.self_attn.grep_a [1, 12, 1, 1] 0.799 -0.428
 encoder.layers.0.self_attn.relative_attention_bias.weight [320, 12] 0.856 -0.720
 encoder.layers.0.self_attn.k_proj.weight [768, 768] 0.075 -0.000

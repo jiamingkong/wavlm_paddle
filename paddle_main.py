@@ -2,11 +2,11 @@
 启动方法1：使用unilm 实现
 """
 from wavlm import WavLM, WavLMConfig
-
+import paddle
 config = WavLMConfig()
 
 model = WavLM(config)
-
+model.load_dict(paddle.load("wavlm-base-plus/wavlm-base-paddle.pdparams"))
 model.eval()
 
 """
@@ -28,7 +28,7 @@ input_ids = paddle.normal(shape=(1, 16000), mean=0, std=1)
 # feed the input into the model
 with paddle.no_grad():
     output = model.extract_features(input_ids)[0]
-
+    print(output)
     print(f"The output shape is {output.shape}")
 
 

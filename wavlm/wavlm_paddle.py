@@ -556,7 +556,8 @@ class TransformerEncoder(nn.Layer):
         # nn.init.constant_(self.pos_conv.bias, 0)
 
         # self.pos_conv = nn.utils.weight_norm(self.pos_conv, name="weight", dim=2)
-        nn.utils.weight_norm(self.pos_conv, name="weight", dim=2)
+        # self.pos_conv.weight_g = self.pos_conv.weight_g.unsqueeze(0).unsqueeze(0)
+        self.pos_conv = nn.utils.weight_norm(self.pos_conv, name="weight", dim=2)
         self.pos_conv = nn.Sequential(self.pos_conv, SamePad(args.conv_pos), nn.GELU())
 
         if hasattr(args, "relative_position_embedding"):
