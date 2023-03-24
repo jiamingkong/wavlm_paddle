@@ -210,10 +210,10 @@ class WavLMConfig:
         self.conv_pos_groups: int = 16     # number of groups for convolutional positional embedding
 
         # relative position embedding
-        self.relative_position_embedding: bool = False     # apply relative position embedding
+        self.relative_position_embedding: bool = True     # apply relative position embedding
         self.num_buckets: int = 320     # number of buckets for relative position embedding
         self.max_distance: int = 1280     # maximum distance for relative position embedding
-        self.gru_rel_pos: bool = False     # apply gated relative position embedding
+        self.gru_rel_pos: bool = True     # apply gated relative position embedding
 
         if cfg is not None:
             self.update(cfg)
@@ -550,7 +550,7 @@ class TransformerEncoder(nn.Layer):
             padding=args.conv_pos // 2,
             groups=args.conv_pos_groups,
             weight_attr=nn.initializer.Normal(mean=0, std=std),
-            bias_attr=False
+            bias_attr=True
         )
         # nn.init.normal_(self.pos_conv.weight, mean=0, std=std)
         # nn.init.constant_(self.pos_conv.bias, 0)
@@ -592,7 +592,7 @@ class TransformerEncoder(nn.Layer):
         self.layer_norm = LayerNorm(self.embedding_dim)
         self.layerdrop = args.encoder_layerdrop
 
-        self.apply(init_bert_params)
+        # self.apply(init_bert_params)
 
     def forward(self, x, padding_mask=None, streaming_mask=None, layer=None):
         x, layer_results = self.extract_features(x, padding_mask, streaming_mask, layer)
@@ -668,11 +668,11 @@ class TransformerSentenceEncoderLayer(nn.Layer):
             activation_dropout: float = 0.1,
             activation_fn: str = "relu",
             layer_norm_first: bool = False,
-            has_relative_attention_bias: bool = False,
+            has_relative_attention_bias: bool = True,
             num_buckets: int = 0,
             max_distance: int = 0,
             rescale_init: bool = False,
-            gru_rel_pos: bool = False,
+            gru_rel_pos: bool = True,
     ) -> None:
 
         super().__init__()

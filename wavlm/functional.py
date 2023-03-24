@@ -371,7 +371,7 @@ def multi_head_attention_forward_paddle(
             attn_mask = attn_mask.unsqueeze(0)
         elif attn_mask.dim() == 3:
             correct_3d_size = (bsz * num_heads, tgt_len, src_len)
-            if attn_mask.shape != correct_3d_size:
+            if tuple(attn_mask.shape) != correct_3d_size:
                 raise RuntimeError(f"The shape of the 3D attn_mask is {attn_mask.shape}, but should be {correct_3d_size}.")
         else:
             raise RuntimeError(f"attn_mask's dimension {attn_mask.dim()} is not supported")
@@ -498,7 +498,7 @@ def multi_head_attention_forward_paddle(
         # if attn_mask's shape is (1, L, S) we need to unsqueeze to (1, 1, L, S)
         # in order to match the input for SDPA of (N, num_heads, L, S)
         if attn_mask is not None:
-            if attn_mask.size(0) == 1 and attn_mask.dim() == 3:
+            if attn_mask.shape[0] == 1 and attn_mask.dim() == 3:
                 attn_mask = attn_mask.unsqueeze(0)
             else:
                 # attn_mask = attn_mask.view(bsz, num_heads, -1, src_len)

@@ -1,0 +1,233 @@
+encoder.layers.0.self_attn.grep_a [1, 12, 1, 1] 0.357 0.126
+encoder.layers.0.self_attn.relative_attention_bias.weight [320, 12] 0.078 0.001
+encoder.layers.0.self_attn.k_proj.weight [768, 768] 0.036 0.000
+encoder.layers.0.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.0.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.0.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.0.self_attn.q_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.0.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.0.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.0.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.0.self_attn.grep_linear.weight [64, 8] 0.163 -0.006
+encoder.layers.0.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.0.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.0.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.0.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.0.fc1.bias [3072] 0.000 0.000
+encoder.layers.0.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.0.fc2.bias [768] 0.000 0.000
+encoder.layers.0.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.0.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.1.self_attn.grep_a [1, 12, 1, 1] 0.349 -0.054
+encoder.layers.1.self_attn.k_proj.weight [768, 768] 0.036 0.000
+encoder.layers.1.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.1.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.1.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.1.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.1.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.1.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.1.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.1.self_attn.grep_linear.weight [64, 8] 0.165 -0.011
+encoder.layers.1.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.1.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.1.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.1.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.1.fc1.bias [3072] 0.000 0.000
+encoder.layers.1.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.1.fc2.bias [768] 0.000 0.000
+encoder.layers.1.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.1.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.2.self_attn.grep_a [1, 12, 1, 1] 0.389 -0.113
+encoder.layers.2.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.2.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.2.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.2.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.2.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.2.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.2.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.2.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.2.self_attn.grep_linear.weight [64, 8] 0.171 -0.005
+encoder.layers.2.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.2.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.2.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.2.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.2.fc1.bias [3072] 0.000 0.000
+encoder.layers.2.fc2.weight [3072, 768] 0.023 -0.000
+encoder.layers.2.fc2.bias [768] 0.000 0.000
+encoder.layers.2.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.2.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.3.self_attn.grep_a [1, 12, 1, 1] 0.349 0.074
+encoder.layers.3.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.3.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.3.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.3.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.3.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.3.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.3.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.3.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.3.self_attn.grep_linear.weight [64, 8] 0.161 -0.009
+encoder.layers.3.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.3.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.3.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.3.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.3.fc1.bias [3072] 0.000 0.000
+encoder.layers.3.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.3.fc2.bias [768] 0.000 0.000
+encoder.layers.3.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.3.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.4.self_attn.grep_a [1, 12, 1, 1] 0.428 -0.079
+encoder.layers.4.self_attn.k_proj.weight [768, 768] 0.036 0.000
+encoder.layers.4.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.4.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.4.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.4.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.4.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.4.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.4.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.4.self_attn.grep_linear.weight [64, 8] 0.170 0.003
+encoder.layers.4.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.4.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.4.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.4.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.4.fc1.bias [3072] 0.000 0.000
+encoder.layers.4.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.4.fc2.bias [768] 0.000 0.000
+encoder.layers.4.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.4.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.5.self_attn.grep_a [1, 12, 1, 1] 0.347 0.212
+encoder.layers.5.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.5.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.5.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.5.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.5.self_attn.q_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.5.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.5.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.5.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.5.self_attn.grep_linear.weight [64, 8] 0.166 -0.001
+encoder.layers.5.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.5.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.5.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.5.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.5.fc1.bias [3072] 0.000 0.000
+encoder.layers.5.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.5.fc2.bias [768] 0.000 0.000
+encoder.layers.5.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.5.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.6.self_attn.grep_a [1, 12, 1, 1] 0.360 -0.185
+encoder.layers.6.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.6.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.6.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.6.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.6.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.6.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.6.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.6.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.6.self_attn.grep_linear.weight [64, 8] 0.165 0.008
+encoder.layers.6.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.6.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.6.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.6.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.6.fc1.bias [3072] 0.000 0.000
+encoder.layers.6.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.6.fc2.bias [768] 0.000 0.000
+encoder.layers.6.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.6.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.7.self_attn.grep_a [1, 12, 1, 1] 0.427 -0.088
+encoder.layers.7.self_attn.k_proj.weight [768, 768] 0.036 0.000
+encoder.layers.7.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.7.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.7.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.7.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.7.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.7.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.7.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.7.self_attn.grep_linear.weight [64, 8] 0.162 0.006
+encoder.layers.7.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.7.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.7.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.7.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.7.fc1.bias [3072] 0.000 0.000
+encoder.layers.7.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.7.fc2.bias [768] 0.000 0.000
+encoder.layers.7.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.7.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.8.self_attn.grep_a [1, 12, 1, 1] 0.374 -0.081
+encoder.layers.8.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.8.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.8.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.8.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.8.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.8.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.8.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.8.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.8.self_attn.grep_linear.weight [64, 8] 0.172 0.001
+encoder.layers.8.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.8.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.8.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.8.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.8.fc1.bias [3072] 0.000 0.000
+encoder.layers.8.fc2.weight [3072, 768] 0.023 -0.000
+encoder.layers.8.fc2.bias [768] 0.000 0.000
+encoder.layers.8.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.8.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.9.self_attn.grep_a [1, 12, 1, 1] 0.482 0.071
+encoder.layers.9.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.9.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.9.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.9.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.9.self_attn.q_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.9.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.9.self_attn.out_proj.weight [768, 768] 0.036 0.000
+encoder.layers.9.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.9.self_attn.grep_linear.weight [64, 8] 0.169 0.006
+encoder.layers.9.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.9.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.9.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.9.fc1.weight [768, 3072] 0.023 -0.000
+encoder.layers.9.fc1.bias [3072] 0.000 0.000
+encoder.layers.9.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.9.fc2.bias [768] 0.000 0.000
+encoder.layers.9.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.9.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.10.self_attn.grep_a [1, 12, 1, 1] 0.336 0.192
+encoder.layers.10.self_attn.k_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.10.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.10.self_attn.v_proj.weight [768, 768] 0.036 0.000
+encoder.layers.10.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.10.self_attn.q_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.10.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.10.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.10.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.10.self_attn.grep_linear.weight [64, 8] 0.164 -0.011
+encoder.layers.10.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.10.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.10.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.10.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.10.fc1.bias [3072] 0.000 0.000
+encoder.layers.10.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.10.fc2.bias [768] 0.000 0.000
+encoder.layers.10.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.10.final_layer_norm.bias [768] 0.000 0.000
+encoder.layers.11.self_attn.grep_a [1, 12, 1, 1] 0.453 0.067
+encoder.layers.11.self_attn.k_proj.weight [768, 768] 0.036 0.000
+encoder.layers.11.self_attn.k_proj.bias [768] 0.000 0.000
+encoder.layers.11.self_attn.v_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.11.self_attn.v_proj.bias [768] 0.000 0.000
+encoder.layers.11.self_attn.q_proj.weight [768, 768] 0.036 0.000
+encoder.layers.11.self_attn.q_proj.bias [768] 0.000 0.000
+encoder.layers.11.self_attn.out_proj.weight [768, 768] 0.036 -0.000
+encoder.layers.11.self_attn.out_proj.bias [768] 0.000 0.000
+encoder.layers.11.self_attn.grep_linear.weight [64, 8] 0.163 0.004
+encoder.layers.11.self_attn.grep_linear.bias [8] 0.000 0.000
+encoder.layers.11.self_attn_layer_norm.weight [768] 0.000 1.000
+encoder.layers.11.self_attn_layer_norm.bias [768] 0.000 0.000
+encoder.layers.11.fc1.weight [768, 3072] 0.023 0.000
+encoder.layers.11.fc1.bias [3072] 0.000 0.000
+encoder.layers.11.fc2.weight [3072, 768] 0.023 0.000
+encoder.layers.11.fc2.bias [768] 0.000 0.000
+encoder.layers.11.final_layer_norm.weight [768] 0.000 1.000
+encoder.layers.11.final_layer_norm.bias [768] 0.000 0.000
+encoder.layer_norm.weight [768] 0.000 1.000
+encoder.layer_norm.bias [768] 0.000 0.000
+layer_norm.weight [512] 0.000 1.000
+layer_norm.bias [512] 0.000 0.000

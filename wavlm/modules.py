@@ -332,10 +332,10 @@ class MultiheadAttention(nn.Layer):
             encoder_decoder_attention=False,
             q_noise=0.0,
             qn_block_size=8,
-            has_relative_attention_bias=False,
+            has_relative_attention_bias=True,
             num_buckets=32,
             max_distance=128,
-            gru_rel_pos=False,
+            gru_rel_pos=True,
             rescale_init=False,
     ):
         super().__init__()
@@ -492,9 +492,9 @@ class MultiheadAttention(nn.Layer):
             relative_position,
             bidirectional=True
         )
-        relative_position_bucket = relative_position_bucket.to(self.relative_attention_bias.weight.device)
+        # relative_position_bucket = relative_position_bucket.to(self.relative_attention_bias.weight.device)
         values = self.relative_attention_bias(relative_position_bucket)
-        values = values.permute([2, 0, 1])
+        values = values.transpose([2, 0, 1])
         return values
 
     def forward(
@@ -540,7 +540,11 @@ class MultiheadAttention(nn.Layer):
             
         if self.has_relative_attention_bias and position_bias is None:
             position_bias = self.compute_bias(tgt_len, src_len)
-            position_bias = position_bias.unsqueeze(0).repeat(bsz, 1, 1, 1).view(bsz * self.num_heads, tgt_len, src_len)
+            # position_bias = position_bias.unsqueeze(0).repeat(bsz, 1, 1, 1).view(bsz * self.num_heads, tgt_len, src_len)
+            position_bias_ = position_bias.unsqueeze(0)
+            # concat bsz times at axis 0
+            position_bias = paddle.concat([position_bias_ for _ in range(bsz)], axis=0)
+            position_bias = position_bias.reshape([bsz * self.num_heads, tgt_len, src_len])
 
         if (
                 # not is_tpu  # don't use PyTorch version on TPUs
@@ -555,19 +559,19 @@ class MultiheadAttention(nn.Layer):
             if position_bias is not None:
                 attn_mask_rel_pos = position_bias
                 if self.gru_rel_pos:
-                    query_layer = query.transpose(0, 1)
-                    new_x_shape = query_layer.shape[:-1] + (self.num_heads, -1)
-                    query_layer = query_layer.view(*new_x_shape)
-                    query_layer = query_layer.permute(0, 2, 1, 3)
+                    query_layer = query.transpose([1, 0, 2])
+                    new_x_shape = query_layer.shape[:-1] + [self.num_heads, -1]
+                    query_layer = query_layer.reshape(new_x_shape)
+                    query_layer = query_layer.transpose([0, 2, 1, 3])
                     _B, _H, _L, __ = query_layer.shape
 
-                    gate_a, gate_b = paddle.sigmoid(self.grep_linear(query_layer).view(
-                        _B, _H, _L, 2, 4).sum(-1, keepdim=False)).chunk(2, dim=-1)
+                    # gate_a, gate_b = paddle.sigmoid(self.grep_linear(query_layer).view(_B, _H, _L, 2, 4).sum(-1, keepdim=False)).chunk(2, dim=-1)
+                    gate_a, gate_b = paddle.nn.functional.sigmoid(self.grep_linear(query_layer).reshape([_B, _H, _L, 2, 4]).sum(-1, keepdim=False)).chunk(2, axis=-1)
                     
                     gate_a_1 = gate_a * (gate_b * self.grep_a - 1.0) + 2.0
-                    attn_mask_rel_pos = gate_a_1.view(bsz * self.num_heads, -1, 1) * position_bias
+                    attn_mask_rel_pos = gate_a_1.reshape([bsz * self.num_heads, -1, 1]) * position_bias
 
-                attn_mask_rel_pos = attn_mask_rel_pos.view((-1, tgt_len, tgt_len))
+                attn_mask_rel_pos = attn_mask_rel_pos.reshape((-1, tgt_len, tgt_len))
             k_proj_bias = self.k_proj.bias
             if k_proj_bias is None:
                 k_proj_bias = paddle.zeros_like(self.q_proj.bias)

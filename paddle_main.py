@@ -29,4 +29,14 @@ input_ids = paddle.normal(shape=(1, 16000), mean=0, std=1)
 with paddle.no_grad():
     output = model.extract_features(input_ids)[0]
 
-    print(output)
+    print(f"The output shape is {output.shape}")
+
+
+
+
+
+
+with open("paddle-wavlm-base-plus.weight.txt", "w") as f:
+    for name, param in model.named_parameters():
+        f.write(f"{name} {list(param.shape)} {param.std().item():.3f} {param.mean().item():.3f}\n")
+
