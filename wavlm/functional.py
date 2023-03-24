@@ -51,29 +51,17 @@ def _mha_shape_check(query: paddle.Tensor, key: paddle.Tensor, value: paddle.Ten
 
 def masked_fill(x, mask, value):
     y = paddle.full(x.shape, value)
-    # import pdb; pdb.set_trace()
-    # return paddle.where(mask, y, x)
-
-# def scaled_dot_product_attention(q, k, v, attn_bias, d_key, dropout_rate):
-#     # q, k, v shaped as [batch_size, num_heads, seq_len, d_k]
-#     scale_factor = 1 / math.sqrt(q.shape[-1])
-#     attn_score = paddle.matmul(q, k, transpose_y=True) * scale_factor
-#     if attn_bias is not None:
-#         attn_score = attn_score + attn_bias
-#     attn_prob = F.softmax(attn_score, axis=-1)
-#     attn_prob = F.dropout(attn_prob, dropout_rate)
-#     attn_vec = paddle.matmul(attn_prob, v)
-#     return attn_vec
+    
 
 def scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal):
     """
     Scaled Dot-Product Attention
     """
-    # import pdb; pdb.set_trace()
+    
     d_key = k.shape[-1]
     scaled_q = paddle.scale(x=q, scale=d_key ** -0.5)
     product = paddle.matmul(x=scaled_q, y=k, transpose_y=True)
-    weights = paddle.nn.functional.softmax(x=product)
+    weights = paddle.nn.functional.softmax(x=product + attn_mask)
     if dropout_p:
         weights = paddle.fluid.layers.nn.dropout(
             weights,
@@ -138,8 +126,8 @@ def linear(input, weight, bias=None):
     # bias: (out_feature) paddle tensor
     if input.dim() == 2 and bias is not None:
         # fused op is marginally faster
-        return paddle.addmm(bias, input, weight.t())
-    output = paddle.matmul(input, weight.t())
+        return paddle.addmm(bias, input, weight)
+    output = paddle.matmul(input, weight)
     if bias is not None:
         output += bias
     return output
@@ -216,7 +204,10 @@ def _in_projection(
     b_k: Optional[paddle.Tensor] = None,
     b_v: Optional[paddle.Tensor] = None,
 ) -> Tuple[paddle.Tensor, paddle.Tensor, paddle.Tensor]:
-    return linear(q, w_q, b_q), linear(k, w_k, b_k), linear(v, w_v, b_v)
+    A, B, C = linear(q, w_q, b_q), linear(k, w_k, b_k), linear(v, w_v, b_v)
+    
+    return A, B, C
+    # return linear(q, w_q, b_q), linear(k, w_k, b_k), linear(v, w_v, b_v)
     
 def multi_head_attention_forward_paddle(
     query: paddle.Tensor,
@@ -350,6 +341,7 @@ def multi_head_attention_forward_paddle(
     if not use_separate_proj_weight:
         assert in_proj_weight is not None, "use_separate_proj_weight is False but in_proj_weight is None"
         q, k, v = _in_projection_packed(query, key, value, in_proj_weight, in_proj_bias)
+        
     else:
         assert q_proj_weight is not None, "use_separate_proj_weight is True but q_proj_weight is None"
         assert k_proj_weight is not None, "use_separate_proj_weight is True but k_proj_weight is None"
@@ -358,8 +350,9 @@ def multi_head_attention_forward_paddle(
             b_q = b_k = b_v = None
         else:
             b_q, b_k, b_v = in_proj_bias.chunk(3)
+        
         q, k, v = _in_projection(query, key, value, q_proj_weight, k_proj_weight, v_proj_weight, b_q, b_k, b_v)
-
+    
     # prep attention mask
 
     if attn_mask is not None:
@@ -401,6 +394,8 @@ def multi_head_attention_forward_paddle(
     #
     # q = q.view(tgt_len, bsz * num_heads, head_dim).transpose(0, 1)
     q = q.reshape([tgt_len, bsz * num_heads, head_dim]).transpose([1, 0, 2])
+
+    
     if static_k is None:
         # k = k.view(k.shape[0], bsz * num_heads, head_dim).transpose(0, 1)
         k = k.reshape([k.shape[0], bsz * num_heads, head_dim]).transpose([1, 0, 2])
@@ -457,7 +452,6 @@ def multi_head_attention_forward_paddle(
     #
     # (deep breath) calculate attention and out projection
     #
-
     if need_weights:
         B, Nt, E = q.shape
         q_scaled = q / math.sqrt(E)
@@ -475,11 +469,8 @@ def multi_head_attention_forward_paddle(
 
         # attn_output = torch.bmm(attn_output_weights, v)
         attn_output = paddle.bmm(attn_output_weights, v)
-
-        # attn_output = attn_output.transpose(0, 1).contiguous().view(tgt_len * bsz, embed_dim)
         attn_output = attn_output.transpose([1, 0, 2]).reshape([tgt_len * bsz, embed_dim])
         attn_output = linear(attn_output, out_proj_weight, out_proj_bias)
-        # attn_output = attn_output.view(tgt_len, bsz, attn_output.size(1))
         attn_output = attn_output.reshape([tgt_len, bsz, attn_output.shape[1]])
 
         # optionally average attention weights over heads
@@ -504,20 +495,17 @@ def multi_head_attention_forward_paddle(
                 # attn_mask = attn_mask.view(bsz, num_heads, -1, src_len)
                 attn_mask = attn_mask.reshape([bsz, num_heads, -1, src_len])
 
-        # q = q.view(bsz, num_heads, tgt_len, head_dim)
         q = q.reshape([bsz, num_heads, tgt_len, head_dim])
-        # k = k.view(bsz, num_heads, src_len, head_dim)
         k = k.reshape([bsz, num_heads, src_len, head_dim])
-        # v = v.view(bsz, num_heads, src_len, head_dim)
         v = v.reshape([bsz, num_heads, src_len, head_dim])
-
+        print(f"Paddle, q[0,0,0,0] = {q[0,0,0,0].item():.4f}")
+        print(f"Paddle, k[0,0,0,0] = {k[0,0,0,0].item():.4f}")
+        print(f"Paddle, v[0,0,0,0] = {v[0,0,0,0].item():.4f}")
+        print(f"Paddle, attn_mask[0,0,0,0] = {attn_mask[0,0,0,0].item():.4f}")
         attn_output = scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal)
-        # attn_output = attn_output.permute(2, 0, 1, 3).contiguous().view(bsz * tgt_len, embed_dim)
         attn_output = attn_output.transpose(perm=[2, 0, 1, 3]).reshape([bsz * tgt_len, embed_dim])
-
+        print(f"attn_output.mean() = {attn_output.mean()}")
         attn_output = linear(attn_output, out_proj_weight, out_proj_bias)
-        # attn_output = attn_output.view(tgt_len, bsz, attn_output.size(1))
-        # attn_output = attn_output.reshape(tgt_len, bsz, attn_output.size(1))
         attn_output = attn_output.reshape([tgt_len, bsz, attn_output.shape[1]])
         # if not is_batched:
         #     # squeeze the output if input was unbatched

@@ -347,9 +347,6 @@ class WavLM(nn.Layer):
             with paddle.no_grad():
                 features = self.feature_extractor(source)
 
-        # print(f"features.shape: {features.shape}")
-        # [1, 512, 49]? why only 49, I see, it's 49 frames
-
         features = features.transpose([0, 2, 1]) # [1, 49, 512]
         features = self.layer_norm(features)
 
@@ -361,7 +358,7 @@ class WavLM(nn.Layer):
         # [1, 49, 768]
         features = self.dropout_input(features)
 
-        print(f"features.shape: {features.shape}")
+        # print(f"features.shape: {features.shape}")
         if mask:
             x, mask_indices = self.apply_mask(
                 features, padding_mask
@@ -375,13 +372,12 @@ class WavLM(nn.Layer):
         # padding_mask: (B, T), bool
         # mask_indices: (B, T), bool
         
-        print(f"x.shape: {x.shape}") # [1, 49, 768]
         x, layer_results = self.encoder(
             x,
             padding_mask=padding_mask,
             layer=None if output_layer is None else output_layer - 1
         )
-
+        # print(f"Debugging: x.shape: {x.shape}, x.mean(): {x.mean()}, x.std(): {x.std()}")
         res = {"x": x, "padding_mask": padding_mask, "features": features, "layer_results": layer_results}
 
         feature = res["features"] if ret_conv else res["x"]
@@ -431,7 +427,6 @@ class ConvFeatureExtractionModel(nn.Layer):
                     nn.Dropout(p=dropout),
                     nn.Sequential(
                         TransposeLast(),
-                        # Fp32LayerNorm(dim, elementwise_affine=True),
                         nn.LayerNorm(normalized_shape=dim, epsilon=1e-5),
                         TransposeLast(),
                     ),
@@ -441,7 +436,6 @@ class ConvFeatureExtractionModel(nn.Layer):
                 return nn.Sequential(
                     make_conv(),
                     nn.Dropout(p=dropout),
-                    # Fp32GroupNorm(dim, dim),
                     nn.GroupNorm(num_groups=dim, num_channels=dim, epsilon=1e-5),
                     nn.GELU(),
                 )
@@ -476,10 +470,8 @@ class ConvFeatureExtractionModel(nn.Layer):
                 (dim, k, stride) = cl
 
                 self.conv_layers.append(
-                    # torch.nn.Conv2d(in_d, dim, k, stride)
                     paddle.nn.Conv2D(in_d, dim, k, stride)
                 )
-                # self.conv_layers.append(torch.nn.ReLU())
                 self.conv_layers.append(paddle.nn.ReLU())
                 in_d = dim
         elif self.conv_type == "custom":
@@ -490,19 +482,15 @@ class ConvFeatureExtractionModel(nn.Layer):
                 assert len(cl) == 3
                 (dim, k, stride) = cl
                 self.conv_layers.append(
-                    # torch.nn.Conv2d(in_d, dim, k, stride, padding=1)
                     paddle.nn.Conv2D(in_d, dim, k, stride, padding=1)
                 )
                 self.conv_layers.append(
-                    # torch.nn.LayerNorm([dim, idim])
                     paddle.nn.LayerNorm([dim, idim])
                 )
-                # self.conv_layers.append(torch.nn.ReLU())
                 self.conv_layers.append(paddle.nn.ReLU())
                 in_d = dim
                 if (i + 1) % 2 == 0:
                     self.conv_layers.append(
-                        # torch.nn.MaxPool2d(2, stride=2, ceil_mode=True)
                         paddle.nn.MaxPool2D(2, stride=2, ceil_mode=True)
                     )
                     idim = int(math.ceil(idim / 2))
@@ -516,15 +504,11 @@ class ConvFeatureExtractionModel(nn.Layer):
         if self.conv_type == "custom":
             for conv in self.conv_layers:
                 if isinstance(conv, nn.LayerNorm):
-                    # x = x.transpose(1, 2)
                     x = x.transpose([0, 2, 1])
-                    # x = conv(x).transpose(1, 2)
                     x = conv(x).transpose([0, 2, 1])
                 else:
                     x = conv(x)
-            # x = x.transpose(2, 3).contiguous()
-            # x = x.transpose([0, 1, ]).contiguous()
-            x = x.transpose([0,1, 3, 2]).contiguous()
+            x = x.transpose([0, 1, 3, 2]).contiguous()
             x = x.view(x.size(0), -1, x.size(-1))
         else:
             for conv in self.conv_layers:
@@ -611,14 +595,9 @@ class TransformerEncoder(nn.Layer):
         if padding_mask is not None:
             x[padding_mask] = 0
 
-        # x_conv = self.pos_conv(x.transpose(1, 2))
         x_conv = self.pos_conv(x.transpose([0, 2, 1]))
-        # x_conv = x_conv.transpose(1, 2)
         x_conv = x_conv.transpose([0, 2, 1])
-        # print("x_conv.shape", x_conv.shape)
-
         x += x_conv
-
         if not self.layer_norm_first:
             x = self.layer_norm(x)
 
@@ -627,8 +606,9 @@ class TransformerEncoder(nn.Layer):
         # B x T x C -> T x B x C
         # x = x.transpose(0, 1)
         x = x.transpose([1, 0, 2])
-        # print(f"transformer_encoder x.shape: {x.shape}")
+        print(f"transformer_encoder x.mean: {x.mean()}, x.std: {x.std()}") # checked
 
+        
         layer_results = []
         z = None
         if tgt_layer is not None:
@@ -638,8 +618,8 @@ class TransformerEncoder(nn.Layer):
         for i, layer in enumerate(self.layers):
             dropout_probability = np.random.random()
             if not self.training or (dropout_probability > self.layerdrop):
-                x, z, pos_bias = layer(x, self_attn_padding_mask=padding_mask, need_weights=False,
-                                       self_attn_mask=streaming_mask, pos_bias=pos_bias)
+                x, z, pos_bias = layer(x, self_attn_padding_mask=padding_mask, need_weights=False,self_attn_mask=streaming_mask, pos_bias=pos_bias)
+                print(f"Layer {i} x.mean: {x.mean()}, x.std: {x.std()}")
             if tgt_layer is not None:
                 layer_results.append((x, z))
             if i == tgt_layer:
@@ -731,9 +711,8 @@ class TransformerSentenceEncoderLayer(nn.Layer):
         modules similar to the original Transformer imlementation.
         """
         residual = x
-        # print(f"TransformerSentenceEncoderLayer x.shape: {x.shape}")
         if self.layer_norm_first:
-            # print("Yes, layer_norm_first")
+            
             x = self.self_attn_layer_norm(x)
             x, attn, pos_bias = self.self_attn(
                 query=x,
@@ -744,7 +723,6 @@ class TransformerSentenceEncoderLayer(nn.Layer):
                 attn_mask=self_attn_mask,
                 position_bias=pos_bias
             )
-            # print(f"TransformerSentenceEncoderLayer x.shape: {x.shape}") # [T, B, D]
             # import pdb; pdb.set_trace()
             x = self.dropout1(x)
             x = residual + x
@@ -769,6 +747,7 @@ class TransformerSentenceEncoderLayer(nn.Layer):
                 attn_mask=self_attn_mask,
                 position_bias=pos_bias
             )
+            # print("TransformerLayer, x.mean = ", x.mean(), "x.std = ", x.std())
 
             x = self.dropout1(x)
             x = residual + x

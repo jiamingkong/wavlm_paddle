@@ -348,7 +348,7 @@ class WavLM(nn.Module):
             features = self.post_extract_proj(features)
 
         features = self.dropout_input(features)
-
+        
         if mask:
             x, mask_indices = self.apply_mask(
                 features, padding_mask
@@ -361,12 +361,12 @@ class WavLM(nn.Module):
         # x: (B, T, D), float
         # padding_mask: (B, T), bool
         # mask_indices: (B, T), bool
+
         x, layer_results = self.encoder(
             x,
             padding_mask=padding_mask,
             layer=None if output_layer is None else output_layer - 1
         )
-
         res = {"x": x, "padding_mask": padding_mask, "features": features, "layer_results": layer_results}
 
         feature = res["features"] if ret_conv else res["x"]
@@ -580,7 +580,6 @@ class TransformerEncoder(nn.Module):
         x_conv = self.pos_conv(x.transpose(1, 2))
         x_conv = x_conv.transpose(1, 2)
         x += x_conv
-
         if not self.layer_norm_first:
             x = self.layer_norm(x)
 
@@ -588,7 +587,8 @@ class TransformerEncoder(nn.Module):
 
         # B x T x C -> T x B x C
         x = x.transpose(0, 1)
-
+        
+        
         layer_results = []
         z = None
         if tgt_layer is not None:
@@ -598,8 +598,8 @@ class TransformerEncoder(nn.Module):
         for i, layer in enumerate(self.layers):
             dropout_probability = np.random.random()
             if not self.training or (dropout_probability > self.layerdrop):
-                x, z, pos_bias = layer(x, self_attn_padding_mask=padding_mask, need_weights=False,
-                                       self_attn_mask=streaming_mask, pos_bias=pos_bias)
+                x, z, pos_bias = layer(x, self_attn_padding_mask=padding_mask, need_weights=False,self_attn_mask=streaming_mask, pos_bias=pos_bias)
+                print(f"Layer {i} x.mean: {x.mean()}, x.std: {x.std()}")
             if tgt_layer is not None:
                 layer_results.append((x, z))
             if i == tgt_layer:
@@ -716,6 +716,7 @@ class TransformerSentenceEncoderLayer(nn.Module):
             x = self.dropout3(x)
             x = residual + x
         else:
+            
             x, attn, pos_bias = self.self_attn(
                 query=x,
                 key=x,
@@ -725,6 +726,7 @@ class TransformerSentenceEncoderLayer(nn.Module):
                 attn_mask=self_attn_mask,
                 position_bias=pos_bias
             )
+            
 
             x = self.dropout1(x)
             x = residual + x

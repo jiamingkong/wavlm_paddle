@@ -540,12 +540,9 @@ class MultiheadAttention(nn.Layer):
             
         if self.has_relative_attention_bias and position_bias is None:
             position_bias = self.compute_bias(tgt_len, src_len)
-            # position_bias = position_bias.unsqueeze(0).repeat(bsz, 1, 1, 1).view(bsz * self.num_heads, tgt_len, src_len)
             position_bias_ = position_bias.unsqueeze(0)
-            # concat bsz times at axis 0
             position_bias = paddle.concat([position_bias_ for _ in range(bsz)], axis=0)
             position_bias = position_bias.reshape([bsz * self.num_heads, tgt_len, src_len])
-
         if (
                 # not is_tpu  # don't use PyTorch version on TPUs
                 incremental_state is None
@@ -576,7 +573,7 @@ class MultiheadAttention(nn.Layer):
             if k_proj_bias is None:
                 k_proj_bias = paddle.zeros_like(self.q_proj.bias)
 
-            # print("query.shape", query.shape)
+            
             x, attn = multi_head_attention_forward_paddle(
                 query,
                 key,
@@ -600,8 +597,7 @@ class MultiheadAttention(nn.Layer):
                 k_proj_weight=self.k_proj.weight,
                 v_proj_weight=self.v_proj.weight,
             )
-            # print("x.shape", x.shape)
-            # import pdb; pdb.set_trace()
+            
             return x, attn, position_bias
 
         if incremental_state is not None:

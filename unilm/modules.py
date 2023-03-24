@@ -537,6 +537,7 @@ class MultiheadAttention(nn.Module):
             if k_proj_bias is None:
                 k_proj_bias = torch.zeros_like(self.q_proj.bias)
 
+            
             x, attn = F.multi_head_attention_forward(
                 query,
                 key,
@@ -561,6 +562,7 @@ class MultiheadAttention(nn.Module):
                 k_proj_weight=self.k_proj.weight,
                 v_proj_weight=self.v_proj.weight,
             )
+            
             return x, attn, position_bias
 
         if incremental_state is not None:

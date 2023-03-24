@@ -21,4 +21,4 @@ inp = paddle.rand((1, 16000)).numpy().astype("float32")
 inp = ({'x': paddle.to_tensor(inp)},
      {'x': torch.as_tensor(inp)})
 
-auto_diff(layer, module, inp, auto_weights=False, options={'atol': 1e-1, 'rtol':1e-2, 'compare_mode': 'strict', 'single_step':True, "diff_phase": "forward"})
+auto_diff(layer, module, inp, auto_weights=False, options={'atol': 1e-1, 'rtol':1e-2, 'compare_mode': 'strict', 'single_step': False, "diff_phase": "forward"})
