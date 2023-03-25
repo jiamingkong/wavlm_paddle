@@ -498,13 +498,8 @@ def multi_head_attention_forward_paddle(
         q = q.reshape([bsz, num_heads, tgt_len, head_dim])
         k = k.reshape([bsz, num_heads, src_len, head_dim])
         v = v.reshape([bsz, num_heads, src_len, head_dim])
-        print(f"Paddle, q[0,0,0,0] = {q[0,0,0,0].item():.4f}")
-        print(f"Paddle, k[0,0,0,0] = {k[0,0,0,0].item():.4f}")
-        print(f"Paddle, v[0,0,0,0] = {v[0,0,0,0].item():.4f}")
-        print(f"Paddle, attn_mask[0,0,0,0] = {attn_mask[0,0,0,0].item():.4f}")
         attn_output = scaled_dot_product_attention(q, k, v, attn_mask, dropout_p, is_causal)
         attn_output = attn_output.transpose(perm=[2, 0, 1, 3]).reshape([bsz * tgt_len, embed_dim])
-        print(f"attn_output.mean() = {attn_output.mean()}")
         attn_output = linear(attn_output, out_proj_weight, out_proj_bias)
         attn_output = attn_output.reshape([tgt_len, bsz, attn_output.shape[1]])
         # if not is_batched:

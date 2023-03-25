@@ -606,7 +606,6 @@ class TransformerEncoder(nn.Layer):
         # B x T x C -> T x B x C
         # x = x.transpose(0, 1)
         x = x.transpose([1, 0, 2])
-        print(f"transformer_encoder x.mean: {x.mean()}, x.std: {x.std()}") # checked
 
         
         layer_results = []
@@ -619,7 +618,6 @@ class TransformerEncoder(nn.Layer):
             dropout_probability = np.random.random()
             if not self.training or (dropout_probability > self.layerdrop):
                 x, z, pos_bias = layer(x, self_attn_padding_mask=padding_mask, need_weights=False,self_attn_mask=streaming_mask, pos_bias=pos_bias)
-                print(f"Layer {i} x.mean: {x.mean()}, x.std: {x.std()}")
             if tgt_layer is not None:
                 layer_results.append((x, z))
             if i == tgt_layer:
