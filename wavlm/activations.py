@@ -29,7 +29,6 @@ def _gelu_python(x):
     return x * 0.5 * (1.0 + paddle.erf(x / math.sqrt(2.0)))
 
 
-gelu = _gelu_python
 
 
 def gelu_new(x):
@@ -45,6 +44,7 @@ def gelu_fast(x):
     return 0.5 * x * (1.0 + paddle.tanh(x * 0.7978845608 *
                                         (1.0 + 0.044715 * x * x)))
 
+gelu = gelu_fast
 
 def _silu_python(x):
     """

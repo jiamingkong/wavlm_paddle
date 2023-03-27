@@ -17,7 +17,7 @@ module = WavLM(cfg)
 module.load_state_dict(checkpoint['model'])
 module.eval()
 
-inp = paddle.rand((1, 16000)).numpy().astype("float32")
+inp = paddle.rand((2, 16000)).numpy().astype("float32")
 inp = ({'x': paddle.to_tensor(inp)},
      {'x': torch.as_tensor(inp)})
 
