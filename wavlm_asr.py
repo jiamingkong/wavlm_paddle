@@ -20,10 +20,8 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 
-# from paddlespeech.s2t.models.wav2vec2.modules.modeling_wav2vec2 import Wav2Vec2ConfigPure
-# from paddlespeech.s2t.models.wav2vec2.modules.modeling_wav2vec2 import Wav2Vec2Model
-# from paddlespeech.s2t.models.wav2vec2.modules.VanillaNN import VanillaNN
-# from paddlespeech.s2t.models.wav2vec2.processing.speech_augmentation import SpecAugment
+from paddlespeech.s2t.models.wav2vec2.modules.VanillaNN import VanillaNN
+from paddlespeech.s2t.models.wav2vec2.processing.speech_augmentation import SpecAugment
 from paddlespeech.s2t.modules.ctc import CTCDecoderBase as CTC
 from paddlespeech.s2t.modules.initializer import DefaultInitializerContext
 from paddlespeech.s2t.utils.ctc_utils import remove_duplicates_and_blank
@@ -51,7 +49,7 @@ class WavLMASR(nn.Layer):
                 for parm in wavlm.parameters():
                     parm.trainable = False
             self.wavlm = wavlm
-            # self.enc = VanillaNN(**config.enc)
+            self.enc = VanillaNN(**config.enc)
             self.ctc = CTC(**config.ctc,
                            odim=config.output_dim,
                            batch_average=False,
@@ -62,7 +60,7 @@ class WavLMASR(nn.Layer):
             wav = F.layer_norm(wav, wav.shape)
 
         # Extract wav2vec output
-        out = self.wav2vec2(wav)[0]
+        out = self.wavlm(wav)[0]
         # We normalize the output if required
         if self.output_norm:
             out = F.layer_norm(out, out.shape)
@@ -91,10 +89,10 @@ class WavLMASR(nn.Layer):
         batch_size = feats.shape[0]
 
         if decoding_method == 'ctc_prefix_beam_search' and batch_size > 1:
-            logger.error(
+            print(
                 f"decoding mode {decoding_method} must be running with batch_size == 1"
             )
-            logger.error(f"current batch_size is {batch_size}")
+            print(f"current batch_size is {batch_size}")
 
         if decoding_method == 'ctc_greedy_search':
             if tokenizer is None and sb_pipeline is False:
@@ -157,7 +155,7 @@ class WavLMASR(nn.Layer):
                 res_tokenids.append(tmp_res_tokenids)
         else:
             raise ValueError(
-                f"wav2vec2 not support decoding method: {decoding_method}")
+                f"WavLM not support decoding method: {decoding_method}")
 
         return res, res_tokenids
 
@@ -178,8 +176,8 @@ class WavLMASR(nn.Layer):
         wav = wav[:, :, 0]
         if self.normalize_wav:
             wav = F.layer_norm(wav, wav.shape[1:])
-        # Extract wav2vec output
-        out = self.wav2vec2(wav)[0]
+        # Extract wavlm output
+        out = self.wavlm(wav)[0]
         # We normalize the output if required
         if self.output_norm:
             out = F.layer_norm(out, out.shape[1:])
@@ -220,8 +218,8 @@ class WavLMASR(nn.Layer):
 
         if self.normalize_wav:
             wav = F.layer_norm(wav, wav.shape[1:])
-        # Extract wav2vec output
-        out = self.wav2vec2(wav)[0]
+        # Extract wavlm output
+        out = self.wavlm(wav)[0]
         # We normalize the output if required
         if self.output_norm:
             out = F.layer_norm(out, out.shape[1:])
@@ -320,5 +318,5 @@ class WavLMBase(nn.Layer):
         return model
 
     def forward(self, wav):
-        out = self.wav2vec2(wav)
+        out = self.wavlm(wav)
         return out

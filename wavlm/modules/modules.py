@@ -16,7 +16,7 @@ import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle import Tensor
-# from paddle.nn import Parameter
+
 
 
 class TransposeLast(nn.Layer):
@@ -562,7 +562,6 @@ class MultiheadAttention(nn.Layer):
                     query_layer = query_layer.transpose([0, 2, 1, 3])
                     _B, _H, _L, __ = query_layer.shape
 
-                    # gate_a, gate_b = paddle.sigmoid(self.grep_linear(query_layer).view(_B, _H, _L, 2, 4).sum(-1, keepdim=False)).chunk(2, dim=-1)
                     gate_a, gate_b = paddle.nn.functional.sigmoid(self.grep_linear(query_layer).reshape([_B, _H, _L, 2, 4]).sum(-1, keepdim=False)).chunk(2, axis=-1)
                     
                     gate_a_1 = gate_a * (gate_b * self.grep_a - 1.0) + 2.0
@@ -678,7 +677,6 @@ class MultiheadAttention(nn.Layer):
                     k = prev_key
                 else:
                     assert k is not None
-                    # k = torch.cat([prev_key, k], dim=1)
                     k = paddle.concat([prev_key, k], axis=1)
                 src_len = k.size(1)
             if "prev_value" in saved_state:
@@ -723,28 +721,14 @@ class MultiheadAttention(nn.Layer):
         if self.add_zero_attn:
             assert v is not None
             src_len += 1
-            # k = torch.cat([k, k.new_zeros((k.size(0), 1) + k.shape[2:])], dim=1)
             k = paddle.concat([k, k.new_zeros((k.size(0), 1) + k.shape[2:])], axis=1)
-            # v = torch.cat([v, v.new_zeros((v.size(0), 1) + v.shape[2:])], dim=1)
             v = paddle.concat([v, v.new_zeros((v.size(0), 1) + v.shape[2:])], axis=1)
             if attn_mask is not None:
-                # attn_mask = torch.cat(
-                #     [attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], dim=1
-                # )
                 attn_mask = paddle.concat(
                     [attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], axis=1
                 )
 
             if key_padding_mask is not None:
-                # key_padding_mask = torch.cat(
-                #     [
-                #         key_padding_mask,
-                #         torch.zeros(key_padding_mask.size(0), 1).type_as(
-                #             key_padding_mask
-                #         ),
-                #     ],
-                #     dim=1,
-                # )
                 key_padding_mask = paddle.concat(
                     [
                         key_padding_mask,

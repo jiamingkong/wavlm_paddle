@@ -22,7 +22,7 @@ import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle.nn import LayerNorm
 from paddle import Tensor
-from .modules import (
+from .modules.modules import (
     # Fp32GroupNorm,
     # Fp32LayerNorm,
     # GradMultiply,
@@ -358,7 +358,6 @@ class WavLM(nn.Layer):
         # [1, 49, 768]
         features = self.dropout_input(features)
 
-        # print(f"features.shape: {features.shape}")
         if mask:
             x, mask_indices = self.apply_mask(
                 features, padding_mask
@@ -745,7 +744,6 @@ class TransformerSentenceEncoderLayer(nn.Layer):
                 attn_mask=self_attn_mask,
                 position_bias=pos_bias
             )
-            # print("TransformerLayer, x.mean = ", x.mean(), "x.std = ", x.std())
 
             x = self.dropout1(x)
             x = residual + x

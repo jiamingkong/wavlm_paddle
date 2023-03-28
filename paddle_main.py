@@ -9,16 +9,6 @@ model = WavLM(config)
 model.load_dict(paddle.load("wavlm-base-plus/wavlm-base-paddle.pdparams"))
 model.eval()
 
-"""
-启动方法2：使用transformers实现
-"""
-# from wavlm_transformers.configuration_wavlm_paddle import WavLMConfig
-# from wavlm_transformers.modeling_wavlm_paddle import WavLMModel
-
-# config = WavLMConfig()
-
-# model = WavLMModel(config)
-
 
 # randomly shoot 1,16000 samples into the model
 import paddle
