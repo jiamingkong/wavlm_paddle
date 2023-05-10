@@ -13,19 +13,12 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 
-# import torch
-# import torch.nn as nn
-# import torch.nn.functional as F
-# from torch.nn import LayerNorm
 import paddle
 import paddle.nn as nn
 import paddle.nn.functional as F
 from paddle.nn import LayerNorm
 from paddle import Tensor
 from .modules.modules import (
-    # Fp32GroupNorm,
-    # Fp32LayerNorm,
-    # GradMultiply,
     MultiheadAttention,
     SamePad,
     init_bert_params,
